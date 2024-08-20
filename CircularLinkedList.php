@@ -50,6 +50,40 @@ class CircularLinkedList {
     }
 
     /**
+     * リストの終端の要素を削除
+     * @return mixed|null 削除した要素（リストが空だった場合はnullを返す）
+     */
+    public function pop() {
+        // リストが空の場合
+        if ($this->head === null) {
+            return null;
+        }
+
+        // リストに1つの要素しかない場合
+        if ($this->head->next === $this->head) {
+            // データ一時退避
+            $data = $this->head->data;
+            // （最初の要素がなくなるので）アクセスポイントにnullを設定
+            $this->head = null;
+            // （退避させた）消去したデータを返す
+            return $data;
+        }
+
+        $current = $this->head;
+        $prev = null;
+
+        // 最後から2番目の要素を見つける
+        while ($current->next !== $this->head) {
+            $prev = $current;
+            $current = $current->next;
+        }
+
+        $prev->next = $this->head;  // 循環構造を維持
+        // 消去したデータを返す
+        return $current->data;
+    }
+
+    /**
      * 表示（デバッグ用）
      * @return void
      */
