@@ -47,47 +47,47 @@ class CircularLinkedListTest extends TestCase
     /**
      * 空のリストを削除した場合、nullが返される
      */
-    public function testPopFromEmptyList(): void
+    public function testDeleteFromEmptyList(): void
     {
-        $this->assertNull($this->list->pop());
+        $this->assertNull($this->list->delete());
     }
 
     /**
      * 1つだけの要素を削除できる
      */
-    public function testPopFromSingleElementList(): void
+    public function testDeleteFromSingleElementList(): void
     {
         $this->list->append(1);
-        $this->assertEquals(1, $this->list->pop());
+        $this->assertEquals(1, $this->list->delete());
         $this->assertEquals("List is empty", $this->getListContent());
     }
 
     /**
      * 複数の要素を削除できる
      */
-    public function testPopFromMultipleElementList(): void
+    public function testDeleteFromMultipleElementList(): void
     {
         $this->list->append(1);
         $this->list->append(2);
         $this->list->append(3);
 
-        $this->assertEquals(3, $this->list->pop());
+        $this->assertEquals(3, $this->list->delete());
         $this->assertEquals("1 2 ", $this->getListContent());
 
-        $this->assertEquals(2, $this->list->pop());
+        $this->assertEquals(2, $this->list->delete());
         $this->assertEquals("1 ", $this->getListContent());
     }
 
     /**
      * 要素削除時にも循環構造が維持される（リストを一周後も同じ内容が表示される）
      */
-    public function testPopMaintainsCircularStructure(): void
+    public function testDeleteMaintainsCircularStructure(): void
     {
         $this->list->append(1);
         $this->list->append(2);
         $this->list->append(3);
 
-        $this->list->pop();
+        $this->list->delete();
         $this->assertEquals("1 2 1 2 ", $this->getListContent(2));
     }
 

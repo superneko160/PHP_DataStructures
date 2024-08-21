@@ -51,9 +51,9 @@ class CircularLinkedList {
 
     /**
      * リストの終端の要素を削除
-     * @return mixed|null 削除した要素（リストが空だった場合はnullを返す）
+     * @return mixed 削除した要素（リストが空だった場合はnullを返す）
      */
-    public function pop() {
+    public function delete(): mixed {
         // リストが空の場合
         if ($this->head === null) {
             return null;
