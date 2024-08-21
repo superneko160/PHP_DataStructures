@@ -154,7 +154,8 @@ class CircularLinkedListTest extends TestCase
     /**
      * 空のリストをechoやprintで表示したとき List is empty と表示される
      */
-    public function testToStringEmptyList(): void {
+    public function testToStringEmptyList(): void
+    {
         $this->expectOutputString('List is empty');
         echo $this->list;
     }
