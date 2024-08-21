@@ -84,20 +84,23 @@ class CircularLinkedList {
     }
 
     /**
-     * 表示（デバッグ用）
-     * @return void
+     * 全要素を文字列で返す
+     * @return string カンマ区切りで結合した要素
      */
-    public function display(): void {
-        // リストが空
+    public function __toString(): string {
+        // リストが空の場合
         if ($this->head === null) {
-            echo "List is empty";
-            return;
+            return 'List is empty';
         }
 
+        $result = [];
         $current = $this->head;
+
         do {
-            echo $current->data . " ";
+            $result[] = $current->data;
             $current = $current->next;
         } while ($current !== $this->head);  // 循環リストなので最初の要素に戻ってきたとき終了
+
+        return implode(', ', $result);
     }
 }

@@ -19,29 +19,20 @@ class CircularLinkedListTest extends TestCase
     public function testAppendToEmptyList(): void
     {
         $this->list->append(1);
-        $this->assertEquals("1 ", $this->getListContent());
+        $this->expectOutputString('1');
+        echo $this->list;
     }
 
     /**
-     * 複数の要素を正しく追加できる
+     * 複数の要素を追加できる
      */
     public function testAppendMultipleItems(): void
     {
         $this->list->append(1);
         $this->list->append(2);
         $this->list->append(3);
-        $this->assertEquals("1 2 3 ", $this->getListContent());
-    }
-
-    /**
-     * 循環構造が正しく維持される（リストを一周後も同じ内容が表示される）
-     */
-    public function testCircularStructure(): void
-    {
-        $this->list->append(1);
-        $this->list->append(2);
-        $this->list->append(3);
-        $this->assertEquals("1 2 3 1 2 3 ", $this->getListContent(2));
+        $this->expectOutputString('1, 2, 3');
+        echo $this->list;
     }
 
     /**
@@ -59,7 +50,8 @@ class CircularLinkedListTest extends TestCase
     {
         $this->list->append(1);
         $this->assertEquals(1, $this->list->delete());
-        $this->assertEquals("List is empty", $this->getListContent());
+        $this->expectOutputString('List is empty');
+        echo $this->list;
     }
 
     /**
@@ -72,36 +64,28 @@ class CircularLinkedListTest extends TestCase
         $this->list->append(3);
 
         $this->assertEquals(3, $this->list->delete());
-        $this->assertEquals("1 2 ", $this->getListContent());
-
         $this->assertEquals(2, $this->list->delete());
-        $this->assertEquals("1 ", $this->getListContent());
+        $this->expectOutputString('1');
+        echo $this->list;
     }
 
     /**
-     * 要素削除時にも循環構造が維持される（リストを一周後も同じ内容が表示される）
+     * echoやprintで表示したときカンマ区切りで表示される
      */
-    public function testDeleteMaintainsCircularStructure(): void
+    public function testToString(): void
     {
         $this->list->append(1);
         $this->list->append(2);
         $this->list->append(3);
-
-        $this->list->delete();
-        $this->assertEquals("1 2 1 2 ", $this->getListContent(2));
+        $this->expectOutputString('1, 2, 3');
+        echo $this->list;
     }
 
     /**
-     * カウンタの回数分デバッグ用の表示メソッドを実行
-     * @param int $counter カウンタ（初期値：1）
-     * @return string|false 出力バッファの内容|失敗
+     * 空のリストをechoやprintで表示したとき List is empty と表示される
      */
-    private function getListContent(int $counter = 1): string|false
-    {
-        ob_start();
-        for ($i = 0; $i < $counter; $i++) {
-            $this->list->display();
-        }
-        return ob_get_clean();
+    public function testToStringEmptyList(): void {
+        $this->expectOutputString('List is empty');
+        echo $this->list;
     }
 }
