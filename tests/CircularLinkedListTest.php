@@ -37,11 +37,11 @@ class CircularLinkedListTest extends TestCase
     }
 
     /**
-     * 空のリストを削除した場合、nullが返される
+     * 空のリストを削除した場合、falseが返される
      */
     public function testDeleteFromEmptyList(): void
     {
-        $this->assertNull($this->list->delete());
+        $this->assertFalse($this->list->delete());
     }
 
     /**

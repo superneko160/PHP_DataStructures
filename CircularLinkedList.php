@@ -56,7 +56,7 @@ class CircularLinkedList {
     public function delete(): mixed {
         // リストが空の場合
         if ($this->head === null) {
-            return null;
+            return false;
         }
 
         // リストに1つの要素しかない場合

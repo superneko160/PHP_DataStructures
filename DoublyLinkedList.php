@@ -41,12 +41,12 @@ class DoublyLinkedList {
 
     /**
      * リストで一致した要素を削除
-     * @return mixed 削除した要素（リストが空だった場合はnullを返す）
+     * @return mixed 削除した要素（リストが空だった場合と要素がなかった場合はfalseを返す）
      */
     public function delete(mixed $data): mixed {
         // リストが空の場合
         if ($this->head === null) {
-            return null;
+            return false;
         }
 
         // 先頭の要素と一致した場合、要素を1個前にずらす
@@ -74,7 +74,7 @@ class DoublyLinkedList {
             $current = $current->next;
         }
 
-        return null;
+        return false;
     }
 
     /**

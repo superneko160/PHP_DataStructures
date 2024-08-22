@@ -36,12 +36,22 @@ class DoublyLinkedListTest extends TestCase
     }
 
     /**
-     * 空のリストを削除した場合、nullが返される
+     * 空のリストを削除した場合、falseが返される
      */
     public function testDeleteFromEmptyList(): void
     {
         $data = 'dummy';
-        $this->assertNull($this->list->delete($data));
+        $this->assertFalse($this->list->delete($data));
+    }
+
+    /**
+     * 存在しない要素を削除しようとした場合、falseが返される
+     */
+    public function testDeleteNotData(): void
+    {
+        $data = 'dummy1';
+        $this->list->append('dummy2');
+        $this->assertFalse($this->list->delete($data));
     }
 
     /**
