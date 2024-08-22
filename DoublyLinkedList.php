@@ -77,7 +77,75 @@ class DoublyLinkedList {
         return null;
     }
 
+    /**
+     * リストの長さを取得
+     * @return int リストの長さ
+     */
+    public function length(): int {
+        $length = 0;
 
+        // リストが空の場合
+        if ($this->head === null) {
+            return $length;
+        }
+
+        $current = $this->head;
+
+        while ($current !== null) {
+            $length++;
+            $current = $current->next;
+        }
+
+        return $length;
+    }
+
+    /**
+     * 指定したデータを探索
+     * @param mixed $data 探索するデータ
+     * @return Node|false データがあったとき要素を返し、なければfalseを返す
+     */
+    public function search(mixed $data): Node|false {
+
+        // リストが空の場合
+        if ($this->head === null) {
+            return false;
+        }
+
+        $current = $this->head;
+
+        while ($current !== null) {
+            // 指定データと一致した場合、その要素を返す
+            if ($current->data === $data) {
+                return $current;
+            }
+            $current = $current->next;
+        }
+
+        // 検索結果が見つからなかった場合
+        return false;
+    }
+
+    /**
+     * リストを配列に変換
+     * @return array 変換した配列
+     */
+    public function toArray(): array {
+        $result = [];
+
+        // リストが空の場合
+        if ($this->head === null) {
+            return $result;
+        }
+
+        $current = $this->head;
+
+        while ($current !== null) {
+            $result[] = $current->data;
+            $current = $current->next;
+        }
+
+        return $result;
+    }
     /**
      * 全要素を文字列で返す
      * @return string カンマ区切りで結合した要素

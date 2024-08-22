@@ -69,6 +69,74 @@ class DoublyLinkedListTest extends TestCase
     }
 
     /**
+     * リストの長さを返す
+     */
+    public function testLength(): void
+    {
+        $this->list->append(1);
+        $this->list->append(2);
+        $this->list->append(3);
+        $this->assertEquals(3, $this->list->length());
+    }
+
+    /**
+     * 空のリストの長さを返す
+     */
+    public function testLengthEmptyList(): void
+    {
+        $this->assertEquals(0, $this->list->length());
+    }
+
+    /**
+     * 存在するデータを探索した場合、要素を返す
+     */
+    public function testSearch(): void
+    {
+        $data = 'dummy';
+        $node = new Node($data);
+        $this->list->append($data);
+        $this->assertEquals($node, $this->list->search($data));
+    }
+
+    /**
+     * 存在しないデータを探索した場合、falseを返す
+     */
+    public function testSearchNotData(): void
+    {
+        $data = 'dummy1';
+        $this->list->append('dummy2');
+        $this->assertEquals(false, $this->list->search($data));
+    }
+
+    /**
+     * 空のリストを探索した場合、falseを返す
+     */
+    public function testSearchToEmptyList(): void
+    {
+        $data = 'dummy';
+        $this->assertEquals(false, $this->list->search($data));
+    }
+
+    /**
+     * リストを配列に変換
+     */
+    public function testToArray(): void
+    {
+        $this->list->append(1);
+        $this->list->append(2);
+        $this->list->append(3);
+        $this->assertEquals([1, 2, 3], $this->list->toArray());
+    }
+
+    /**
+     * 空のリストを空の配列に変換
+     */
+    public function testToArrayEmptyList(): void
+    {
+        $this->assertEquals([], $this->list->toArray());
+    }
+
+    /**
      * echoやprintで表示したときカンマ区切りで表示される
      */
     public function testToString(): void
