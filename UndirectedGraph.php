@@ -82,6 +82,23 @@ class UndirectedGraph {
     }
 
     /**
+     * 頂点が存在するかチェック
+     * @param string $vertex
+     * @return bool
+     */
+    public function hasVertex(string $vertex): bool {
+        return isset($this->vertices[$vertex]);
+    }
+
+    /**
+     * グラフ構造が空かチェック
+     * @return bool
+     */
+    public function isEmpty(): bool {
+        return empty($this->vertices);
+    }
+
+    /**
      * グラフ構造を文字列で表現
      * @return string
      */
