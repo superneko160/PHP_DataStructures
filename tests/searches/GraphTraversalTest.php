@@ -110,4 +110,85 @@ class GraphTraversalTest extends TestCase
         $this->assertNotContains('A', $result);
         $this->assertNotContains('B', $result);
     }
+
+    /**
+     * 単純な連結グラフでのBFS
+     */
+    public function testBreadthFirstSearchOnSimpleGraph(): void
+    {
+        $this->graph->addEdge('A', 'B');
+        $this->graph->addEdge('A', 'C');
+        $this->graph->addEdge('B', 'D');
+        $this->graph->addEdge('C', 'D');
+
+        $result = GraphTraversal::breadthFirstSearch($this->graph, 'A');
+
+        $this->assertEquals('A', $result[0]);
+        $this->assertContains('B', array_slice($result, 1, 2));
+        $this->assertContains('C', array_slice($result, 1, 2));
+        $this->assertEquals('D', $result[3]);
+        $this->assertCount(4, $result);
+    }
+
+    /**
+     * 非連結グラフでのBFS
+     */
+    public function testBreadthFirstSearchOnDisconnectedGraph(): void
+    {
+        $this->graph->addEdge('A', 'B');
+        $this->graph->addEdge('C', 'D');
+        $this->graph->addVertex('E');
+
+        $result = GraphTraversal::breadthFirstSearch($this->graph, 'A');
+
+        // BFSは開始頂点からたどることができる頂点のみを含む
+        $this->assertCount(2, $result);  // A,Bの2つ
+        $this->assertEquals('A', $result[0]);  // 開始頂点は必ず最初
+        $this->assertEquals('B', $result[1]);  // BFSでは隣接頂点が2番目に来る
+        $this->assertNotContains('C', $result);
+        $this->assertNotContains('D', $result);
+        $this->assertNotContains('E', $result);
+
+        // 別の連結成分からスタートした場合のテスト
+        $resultFromC = GraphTraversal::breadthFirstSearch($this->graph, 'C');
+
+        $this->assertCount(2, $resultFromC);  // C,Dの2つ
+        $this->assertEquals('C', $resultFromC[0]);  // 開始頂点は必ず最初
+        $this->assertEquals('D', $resultFromC[1]);  // BFSでは隣接頂点が2番目に来る
+        $this->assertNotContains('A', $resultFromC);
+        $this->assertNotContains('B', $resultFromC);
+        $this->assertNotContains('E', $resultFromC);
+
+        // 孤立頂点からスタートした場合のテスト
+        $resultFromE = GraphTraversal::breadthFirstSearch($this->graph, 'E');
+
+        $this->assertCount(1, $resultFromE);  // Eのみ
+        $this->assertEquals('E', $resultFromE[0]);
+        $this->assertNotContains('A', $resultFromE);
+        $this->assertNotContains('B', $resultFromE);
+        $this->assertNotContains('C', $resultFromE);
+        $this->assertNotContains('D', $resultFromE);
+    }
+
+    /**
+     * 空のグラフでBFS
+     */
+    public function testBreadthFirstSearchOnEmptyGraph(): void
+    {
+        $result = GraphTraversal::breadthFirstSearch($this->graph, 'A');
+
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * 存在しない開始頂点でのBFS
+     */
+    public function testBreadthFirstSearchWithNonExistentStartVertex(): void
+    {
+        $this->graph->addEdge('A', 'B');
+
+        $result = GraphTraversal::breadthFirstSearch($this->graph, 'C');
+
+        $this->assertEmpty($result);
+    }
 }

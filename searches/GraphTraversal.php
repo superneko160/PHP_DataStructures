@@ -44,4 +44,43 @@ class GraphTraversal {
             }
         }
     }
+
+    /**
+     * 幅優先探索（BFS）
+     * @param UndirectedGraph $graph 探索するデータ
+     * @param string $startVertex 探索を開始する頂点
+     * @return array 探索結果
+     */
+    public static function breadthFirstSearch(UndirectedGraph $graph, string $startVertex): array
+    {
+        // グラフが空の場合や開始頂点が存在しない場合
+        if ($graph->isEmpty() || !$graph->hasVertex($startVertex)) {
+            return [];
+        }
+
+        $visited = [$startVertex => true];  // 始点を訪問済みとしてマーク
+        $result = [];
+
+        // BFSなのでキューを利用
+        $queue = new SplQueue();
+        $queue->enqueue($startVertex);  // 始点を追加
+
+        // キューが空になるまで実行
+        while (!$queue->isEmpty()) {
+
+            // キューから頂点を取り出し、結果配列に追加
+            $vertex = $queue->dequeue();  // 頂点を取得
+            $result[] = $vertex;
+
+            // 取り出した頂点の隣接頂点をすべて探索
+            foreach ($graph->getAdjacentVertices($vertex) as $adjacentVertex) {
+                if (!isset($visited[$adjacentVertex])) {
+                    $visited[$adjacentVertex] = true;  // 訪問済みとしてマーク
+                    $queue->enqueue($adjacentVertex);  // 未訪問の頂点をキューに追加
+                }
+            }
+        }
+
+        return $result;
+    }
 }
