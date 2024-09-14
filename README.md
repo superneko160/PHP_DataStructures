@@ -2,6 +2,12 @@
 
 Repository for learning PHP data structures.
 
+## Data Structures
+
+- DoublyLinkedList.php
+- CircularLinkedList
+- UndirectedGraph
+
 ## SetUp
 
 ```bash
