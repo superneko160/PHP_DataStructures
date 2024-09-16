@@ -2,15 +2,15 @@
 
 use PHPUnit\Framework\TestCase;
 
-require_once __DIR__ . '/../UndirectedGraph.php';
+require_once __DIR__ . '/../DirectedGraph.php';
 
-class UndirectedGraphTest extends TestCase
+class DirectedGraphTest extends TestCase
 {
-    private UndirectedGraph $graph;
+    private DirectedGraph $graph;
 
     protected function setUp(): void
     {
-        $this->graph = new UndirectedGraph();
+        $this->graph = new DirectedGraph();
     }
 
     /**
@@ -31,13 +31,15 @@ class UndirectedGraphTest extends TestCase
     {
         $this->graph->addEdge('A', 'B');
 
-        // A <-> B に辺が存在する
+        // A -> B に辺が存在する
         $this->assertTrue($this->graph->hasEdge('A', 'B'));
-        $this->assertTrue($this->graph->hasEdge('B', 'A'));
+        // B -> A に辺が存在しない（有向グラフの特性）
+        $this->assertFalse($this->graph->hasEdge('B', 'A'));
 
-        // Aを指定したときにB、Bを指定したときにAが取得できる
+        // Aを指定したときにBが取得できる
         $this->assertContains('B', $this->graph->getAdjacentVertices('A'));
-        $this->assertContains('A', $this->graph->getAdjacentVertices('B'));
+        // Bを指定したときにAが取得できない（有向グラフの特性）
+        $this->assertNotContains('A', $this->graph->getAdjacentVertices('B'));
     }
 
     /**
@@ -49,15 +51,13 @@ class UndirectedGraphTest extends TestCase
         $this->graph->addEdge('A', 'C');
         $this->graph->removeEdge('A', 'B');
 
-        // A <-> B に辺が存在しない
+        // A -> B に辺が存在しない
         $this->assertFalse($this->graph->hasEdge('A', 'B'));
-        $this->assertFalse($this->graph->hasEdge('B', 'A'));
-        // A <-> C に辺が存在する（消えていないことの確認）
+        // A -> C に辺が存在する（消えていないことの確認）
         $this->assertTrue($this->graph->hasEdge('A', 'C'));
 
-        // Aを指定したときにB、Bを指定したときにAが取得できない（連結先がないことの確認）
+        // Aを指定したときにBが取得できない
         $this->assertNotContains('B', $this->graph->getAdjacentVertices('A'));
-        $this->assertNotContains('A', $this->graph->getAdjacentVertices('B'));
     }
 
     /**
@@ -68,25 +68,26 @@ class UndirectedGraphTest extends TestCase
         $this->graph->addEdge('A', 'B');
         $this->graph->addEdge('A', 'C');
         $this->graph->addEdge('B', 'D');
+        $this->graph->addEdge('C', 'A');  // 循環経路の追加
         $this->graph->removeVertex('A');
 
         // どこにもつながっていない（辺が存在しない）
         $this->assertEmpty($this->graph->getAdjacentVertices('A'));
-        // B、Cを指定したときにAが取得できない
-        $this->assertNotContains('A', $this->graph->getAdjacentVertices('B'));
-        $this->assertNotContains('A', $this->graph->getAdjacentVertices('C'));
-        // B <-> D の辺が残っていることの確認
-        $this->assertTrue($this->graph->hasEdge('B', 'D'));
+        // Bを指定したときにDが取得できる（削除されていない辺の確認）
+        $this->assertContains('D', $this->graph->getAdjacentVertices('B'));
+        // Cを指定したときに空のリストが返される（Aへの辺が削除されたことの確認）
+        $this->assertEmpty($this->graph->getAdjacentVertices('C'));
     }
 
     /**
-     * 指定した頂点に隣接する頂点のリストを取得できる
+     * 指定した頂点から出る辺の終点となる頂点のリストを取得できる
      */
     public function testGetAdjacentVertices(): void
     {
         $this->graph->addEdge('A', 'B');
         $this->graph->addEdge('A', 'C');
         $this->graph->addEdge('B', 'D');
+        $this->graph->addEdge('D', 'A');  // 循環経路の追加
 
         $adjacentToA = $this->graph->getAdjacentVertices('A');
         $this->assertCount(2, $adjacentToA);
@@ -94,32 +95,31 @@ class UndirectedGraphTest extends TestCase
         $this->assertContains('C', $adjacentToA);
 
         $adjacentToB = $this->graph->getAdjacentVertices('B');
-        $this->assertCount(2, $adjacentToB);
-        $this->assertContains('A', $adjacentToB);
+        $this->assertCount(1, $adjacentToB);
         $this->assertContains('D', $adjacentToB);
+        $this->assertNotContains('A', $adjacentToB);
+
+        $adjacentToD = $this->graph->getAdjacentVertices('D');
+        $this->assertCount(1, $adjacentToD);
+        $this->assertContains('A', $adjacentToD);
     }
 
     /**
-     * 2つの頂点間に辺が存在するかチェックできる
+     * 有向グラフの循環経路をテスト
      */
-    public function testHasEdge(): void
+    public function testCyclicPath(): void
     {
         $this->graph->addEdge('A', 'B');
         $this->graph->addEdge('B', 'C');
+        $this->graph->addEdge('C', 'A');
 
         $this->assertTrue($this->graph->hasEdge('A', 'B'));
-        $this->assertTrue($this->graph->hasEdge('B', 'A'));
         $this->assertTrue($this->graph->hasEdge('B', 'C'));
-        $this->assertFalse($this->graph->hasEdge('A', 'C'));
-    }
+        $this->assertTrue($this->graph->hasEdge('C', 'A'));
 
-    /**
-     * 存在しない頂点を取得をしようとした場合
-     */
-    public function testNonExistentVertex(): void
-    {
-        $this->assertEmpty($this->graph->getAdjacentVertices('X'));
-        $this->assertFalse($this->graph->hasEdge('X', 'Y'));
+        $this->assertFalse($this->graph->hasEdge('B', 'A'));
+        $this->assertFalse($this->graph->hasEdge('C', 'B'));
+        $this->assertFalse($this->graph->hasEdge('A', 'C'));
     }
 
     /**
@@ -130,26 +130,20 @@ class UndirectedGraphTest extends TestCase
         // 空のグラフ
         $this->assertEquals('', $this->graph->__toString());
 
-        // 頂点のみ（辺なし）
-        $this->graph->addVertex('A');
-        $this->assertEquals('A <-> ', $this->graph->__toString());
-
         // 1つの辺を持つグラフ
         $this->graph->addEdge('A', 'B');
-        $this->assertEquals('A <-> B, B <-> A', $this->graph->__toString());
+        $this->assertEquals('A -> B', $this->graph->__toString());
 
-        // 複数の辺を持つグラフ
+        // 辺を追加（複数の頂点、辺のテスト）
         $this->graph->addEdge('A', 'C');
         $this->graph->addEdge('B', 'D');
-    
-        $expectedString = 'A <-> B, C, B <-> A, D, C <-> A, D <-> B';
+
+        $expectedString = 'A -> B, C, B -> D';
         $actualString = $this->graph->__toString();
     
         // 頂点の順序が不定なため、各部分を個別にチェック
-        $this->assertStringContainsString('A <-> B, C', $actualString);
-        $this->assertStringContainsString('B <-> A, D', $actualString);
-        $this->assertStringContainsString('C <-> A', $actualString);
-        $this->assertStringContainsString('D <-> B', $actualString);
+        $this->assertStringContainsString('A -> B, C', $actualString);
+        $this->assertStringContainsString('B -> D', $actualString);
 
         // 文字列の長さを確認
         $this->assertEquals(strlen($expectedString), strlen($actualString));
