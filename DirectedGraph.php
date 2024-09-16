@@ -1,11 +1,13 @@
 <?php
 
+require_once __DIR__ . '/GraphInterface.php';
+
 /**
  * 有向グラフ（辺に方向があるグラフ）
  * リストのインデックス：頂点
  * リストの要素：（頂点から出る）辺
  */
-class DirectedGraph {
+class DirectedGraph implements GraphInterface {
 
     // 頂点
     private array $vertices;

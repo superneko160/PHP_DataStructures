@@ -1,11 +1,13 @@
 <?php
 
+require_once __DIR__ . '/GraphInterface.php';
+
 /**
  * 無向グラフ（辺に方向がないグラフ）
  * リストのインデックス：頂点
  * リストの要素：（頂点に接続される）辺
  */
-class UndirectedGraph {
+class UndirectedGraph implements GraphInterface {
 
     // 頂点
     private array $vertices;
