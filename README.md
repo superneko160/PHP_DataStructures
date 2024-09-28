@@ -4,10 +4,10 @@ Repository for learning PHP data structures.
 
 ## Data Structures
 
-- DoublyLinkedList.php
-- CircularLinkedList
-- DirectedGraph
-- UndirectedGraph
+- DoublyLinkedList 双方向リスト
+- CircularLinkedList 循環リスト
+- DirectedGraph 無向グラフ
+- UndirectedGraph 有向グラフ
 
 ## SetUp
 
