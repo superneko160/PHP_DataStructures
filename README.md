@@ -9,6 +9,10 @@ Repository for learning PHP data structures.
 - DirectedGraph 無向グラフ
 - UndirectedGraph 有向グラフ
 
+> [!NOTE]  
+> SPLでいくつかデータ構造が用意されているので基本的にそちらを使えばいい  
+> [PHP: データ構造 - Manual](https://www.php.net/manual/ja/spl.datastructures.php)
+
 ## SetUp
 
 ```bash
