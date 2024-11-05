@@ -4,7 +4,7 @@
  * グラフインターフェース
  */
 interface GraphInterface {
-    public function isEmpty(): bool;
-    public function hasVertex(string $vertex): bool;
-    public function getAdjacentVertices(string $vertex): array;
+    function isEmpty(): bool;
+    function hasVertex(string $vertex): bool;
+    function getAdjacentVertices(string $vertex): array;
 }
